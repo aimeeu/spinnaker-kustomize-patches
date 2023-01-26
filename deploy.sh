@@ -160,7 +160,7 @@ function deploy_operator() {
   if ! kubectl get ns "$OPERATOR_NS" >/dev/null 2>&1; then
     exec_kubectl_mutating "kubectl create ns $OPERATOR_NS" handle_generic_kubectl_error
   fi
-  exec_kubectl_mutating "kubectl -n $OPERATOR_NS apply -k $ROOT_DIR/operator" handle_generic_kubectl_error
+  exec_kubectl_mutating "kubectl -n $OPERATOR_NS apply -f $ROOT_DIR/operator/deploy/operator/cluster/" handle_generic_kubectl_error
   info "Waiting for operator to start."
   check_operator_deployment
   while [[ $OP_READY != 1 ]]; do
@@ -176,7 +176,7 @@ function assert_operator() {
   [[ $SPIN_OP_DEPLOY = 0 ]] && info "Not manging operator\n" && return
 
   find_current_operator_details
-  OPERATOR_NS=$(grep "^namespace:" "$ROOT_DIR"/operator/kustomization.yml | awk '{print $2}')
+  OPERATOR_NS=$(grep "namespace:" "$ROOT_DIR"/operator/deploy/operator/cluster/role_binding.yaml | awk '{print $2}')
   info "Resolved operator namespace: $OPERATOR_NS\n"
   check_operator_deployment
 
