@@ -89,14 +89,14 @@ function check_prerequisites() {
   case $SPIN_FLAVOR in
   "oss")
     OP_API_GROUP=spinnakerservices.spinnaker.io
-    if [[ $SPIN_OP_VERSION == "latest" ]]; then SPIN_OP_VERSION=`curl -s https://github.com/armory/spinnaker-operator/releases/latest | cut -d'"' -f2 | awk '{gsub(".*/v","")}1'`; fi
+    if [[ $SPIN_OP_VERSION == "latest" ]]; then SPIN_OP_VERSION=$(curl -s --head https://github.com/armory/spinnaker-operator/releases/latest | grep -iE "location\s*:" | grep -oE "v\d+\.\d+\.\d+" | grep -oE "\d+\.\d+\.\d+"); fi
     OP_URL=https://github.com/armory/spinnaker-operator/releases/download/v${SPIN_OP_VERSION}/manifests.tgz
     OP_IMAGE_BASE="armory/spinnaker-operator"
     API_VERSION="apiVersion: spinnaker.io/v1alpha2"
     ;;
   "armory")
     OP_API_GROUP=spinnakerservices.spinnaker.armory.io
-    if [[ $SPIN_OP_VERSION == "latest" ]]; then SPIN_OP_VERSION=`curl -s https://github.com/armory-io/spinnaker-operator/releases/latest | cut -d'"' -f2 | awk '{gsub(".*/v","")}1'`; fi
+    if [[ $SPIN_OP_VERSION == "latest" ]]; then SPIN_OP_VERSION=$(curl -s --head https://github.com/armory-io/spinnaker-operator/releases/latest | grep -iE "location\s*:" | grep -oE "v\d+\.\d+\.\d+" | grep -oE "\d+\.\d+\.\d+"); fi
     OP_URL=https://github.com/armory-io/spinnaker-operator/releases/download/v${SPIN_OP_VERSION}/manifests.tgz
     OP_IMAGE_BASE="armory/armory-operator"
     API_VERSION="apiVersion: spinnaker.armory.io/v1alpha2"
